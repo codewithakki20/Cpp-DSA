@@ -15,28 +15,37 @@ public:
 
 static int idx = -1;
 
-Node* buildTree(vector<int>& nodes) { // O(n)
+Node* buildTree(vector<int>& nodes) {
     idx++;
     if (idx >= nodes.size() || nodes[idx] == -1) {
         return NULL;
     }
 
     Node* currNode = new Node(nodes[idx]);
-    currNode->left = buildTree(nodes);   // left subtree
-    currNode->right = buildTree(nodes);  // right subtree
+    currNode->left = buildTree(nodes);  
+    currNode->right = buildTree(nodes); 
 
     return currNode;
 }
 
-int height(Node* root) {
-    if (root == NULL) {
-        return 0;
+void KthHelper(Node* root, int K, int currLevel) {// O(n)
+    if(root == NULL) {
+        return;
     }
 
-    int leftHt = height(root->left);
-    int rightHt = height(root->right);
+    if(currLevel == K) {
+        cout << root->data << " ";
+        return;
+    }
 
-    return max(leftHt, rightHt) + 1;
+    KthHelper(root->left, K, currLevel+1); //left
+    KthHelper(root->right, K, currLevel+1); //rignt
+
+}
+
+void KthLevel(Node* root, int K) {// O(n)
+    KthHelper(root, K, 1);
+    cout << endl;
 }
 
 int main() {
@@ -44,7 +53,8 @@ int main() {
                          3, -1, 6, -1, -1};
     Node* root = buildTree(nodes);
 
-    cout << "Height of tree: " << height(root) << endl;
+    KthLevel(root, 1);
+
 
     return 0;
 }
