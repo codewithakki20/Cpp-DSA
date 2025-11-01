@@ -49,27 +49,8 @@ bool findPath(Node* root, int n, vector<int> &path) {
     return false;
 }
 
-// Lowest Common Ancestor using path method
-int LCA(Node* root, int n1, int n2) { // O(n), O(n)
-    vector<int> path1, path2;
-
-    if(!findPath(root, n1, path1) || !findPath(root, n2, path2)) {
-        return -1; // if one of the nodes is not found
-    }
-
-    int lca = -1;
-    int i = 0;
-    while(i < path1.size() && i < path2.size()) {
-        if(path1[i] != path2[i]) break;
-        lca = path1[i];
-        i++;
-    }
-
-    return lca;
-}
-
 // Optimized LCA
-Node* LCA2(Node* root, int n1, int n2) {
+Node* LCA(Node* root, int n1, int n2) {
     if(root == NULL) {
         return NULL;
     }
@@ -78,14 +59,50 @@ Node* LCA2(Node* root, int n1, int n2) {
         return root;
     }
 
-    Node* leftLCA = LCA2(root->left, n1, n2);
-    Node* rightLCA = LCA2(root->right, n1, n2);
+    Node* leftLCA = LCA(root->left, n1, n2);
+    Node* rightLCA = LCA(root->right, n1, n2);
 
     if(leftLCA != NULL && rightLCA != NULL) {
         return root;
     }
 
     return leftLCA == NULL ? rightLCA : leftLCA;
+}
+
+int dist(Node* root, int n) {
+    if(root == NULL) {
+        return -1;
+    }
+
+    if(root->data == n) {
+        return 0;
+    }
+
+    int leftDist = dist(root->left, n);
+    if(leftDist != -1) {
+        return leftDist + 1;
+    }
+
+    int rightDist = dist(root->right, n);
+    if(rightDist != -1) {
+        return rightDist + 1;
+    }
+
+
+    return -1;
+
+
+}
+
+int minDist(Node* root, int n1, int n2) {
+    Node* lca = LCA(root, n1, n2);
+
+    int dist1 = dist(lca, n1);
+    int dist2 = dist(lca, n2);
+
+    return dist1 + dist2;
+
+
 }
 
 int main() {
@@ -96,20 +113,9 @@ int main() {
     Node* root = buildTree(nodes);
 
     int n1 = 4, n2 = 5;
-    Node* lcaNode = LCA2(root, n1, n2);
+    Node* lcaNode = LCA(root, n1, n2);
     cout << "LCA(" << n1 << "," << n2 << ") = " << (lcaNode ? lcaNode->data : -1) << endl;
 
-    n1 = 4; n2 = 6;
-    lcaNode = LCA2(root, n1, n2);
-    cout << "LCA(" << n1 << "," << n2 << ") = " << (lcaNode ? lcaNode->data : -1) << endl;
-
-    n1 = 3; n2 = 4;
-    lcaNode = LCA2(root, n1, n2);
-    cout << "LCA(" << n1 << "," << n2 << ") = " << (lcaNode ? lcaNode->data : -1) << endl;
-
-    n1 = 2; n2 = 4;
-    lcaNode = LCA2(root, n1, n2);
-    cout << "LCA(" << n1 << "," << n2 << ") = " << (lcaNode ? lcaNode->data : -1) << endl;
 
     return 0;
 }
