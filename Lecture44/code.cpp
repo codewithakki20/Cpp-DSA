@@ -1,68 +1,44 @@
 #include <iostream>
 #include <vector>
+#include<graph>
 #include <list>
 using namespace std;
 
-class Graph {
-    int V;
-    list<int>* l;
-public:
-    Graph(int V) {
-        this->V = V;
-        l = new list<int>[V];
-    }
+class Edge {
+public: 
+    int v;
+    int wt;
 
-    void addEdge(int u, int v) {
-        l[u].push_back(v);
-        l[v].push_back(u);
-    }
-
-    void printGraph() {
-        for (int u = 0; u < V; u++) {
-            cout << u << " : ";
-            for (int v : l[u]) {
-                cout << v << " ";
-            }
-            cout << endl;
-        }
-    }
-
-    void dfsHelper(int u, vector<bool> &vis) {
-        vis[u] = true;
-        cout << u << " ";
-        for (int v : l[u]) {
-            if (!vis[v]) {
-                dfsHelper(v, vis);
-            }
-        }
-    }
-
-    void dfs(int start) {
-        vector<bool> vis(V, false);
-        cout << "\nDFS Traversal: ";
-        dfsHelper(start, vis);
-        cout << endl;
+    Edge(int v, int wt) {
+        this->v = v;
+        this->wt = wt;
     }
 };
 
 int main() {
-    Graph graph(7);
+    int V = 6;
+    vector<vector>Edge>> graph(v);
 
-    graph.addEdge(0, 1);
-    graph.addEdge(0, 2);
-    graph.addEdge(1, 3);
-    graph.addEdge(2, 4);
-    graph.addEdge(3, 4);
-    graph.addEdge(3, 5);
-    graph.addEdge(4, 5);
-    graph.addEdge(5, 6);
+    graph[0].push_back(Edge(1, 2));
+    graph[0].push_back(Edge(2, 4));
 
-    cout << "Adjacency List of Graph:\n";
-    graph.printGraph();
+    graph[1].push_back(Edge(2, 1));
+    graph[1].push_back(Edge(3, 7));
 
-   
-    graph.dfs(0);
+    graph[2].push_back(Edge(4, 3));
 
-    cout << endl;
+    graph[3].push_back(Edge(5, 1));
+
+    graph[3].push_back(Edge(3, 2));
+    graph[3].push_back(Edge(2, 5));
+
+    graph[4].push_back(Edge(5, 2));
+    graph[4].push_back(Edge(2, 5));
+
+    graph[5].push_back(Edge(3, 1));
+    graph[5].push_back(Edge(4, 5));
+
+    
+
     return 0;
 }
